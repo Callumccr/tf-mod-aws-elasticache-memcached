@@ -8,8 +8,8 @@ output "configuration_endpoint" {
   description = "(Memcached only) The configuration endpoint to allow host discovery."
 }
 
-output "prometheus_endpoint" {
-  value = tomap("cms", element(aws_elasticache_cluster.default.*.configuration_endpoint[0], "session", element(aws_elasticache_cluster.default.*.configuration_endpoint[1])))
+output "cache_endpoint_map" {
+  value = tomap("cms", element(aws_elasticache_cluster.default.*.configuration_endpoint, 0), "session", element(aws_elasticache_cluster.default.*.configuration_endpoint, 1))
 }
 
 
