@@ -1,5 +1,5 @@
 # -----------------------------------------------------------------------------
-# Outputs: Elasticache
+# Outputs: TF-MOD-MEMCACHED - https://github.com/aciem-admin/tf-mod-memcached
 # -----------------------------------------------------------------------------
 
 output "cache_nodes" {

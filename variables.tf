@@ -1,91 +1,34 @@
-/*****
-Enabled
-*****/
+# -----------------------------------------------------------------------------
+# Variables: Common AWS Provider - Autoloaded from Terragrunt
+# -----------------------------------------------------------------------------
+
+variable "aws_region" {
+  description = "The AWS region (e.g. ap-southeast-2). Autoloaded from region.tfvars."
+  type        = string
+  default     = ""
+}
+
+variable "aws_account_id" {
+  description = "The AWS account id of the provider being deployed to (e.g. 12345678). Autoloaded from account.tfvars"
+  type        = string
+  default     = ""
+}
+
+variable "aws_assume_role_arn" {
+  description = "ARN of the IAM role when optionally connecting to AWS via assumed role. Autoloaded from account.tfvars."
+  type        = string
+  default     = ""
+}
+
+# -----------------------------------------------------------------------------
+# Variables: TF-MOD-MEMCACHED - https://github.com/aciem-admin/tf-mod-memcached
+# -----------------------------------------------------------------------------
+
 variable "enabled" {
+  description = "(Optional). A Switch that decides whether to create a terraform resource or run a provisioner. Default is true"
   type        = bool
-  description = "switch the create the desired resource"
-  default     = "true"
+  default     = true
 }
-
-/*****
-Label Module Variables
-*****/
-
-variable "namespace" {
-  type        = string
-  default     = ""
-  description = "Namespace, which could be your organization name or abbreviation, e.g. 'eg' or 'cp'"
-}
-
-variable "environment" {
-  type        = string
-  default     = ""
-  description = "Environment, e.g. 'prod', 'staging', 'dev', 'pre-prod', 'UAT'"
-}
-
-variable "name" {
-  type        = string
-  default     = ""
-  description = "Solution name, e.g. 'app' or 'jenkins'"
-}
-
-variable "delimiter" {
-  type        = string
-  default     = "-"
-  description = "Delimiter to be used between `namespace`, `environment`, `stage`, `name` and `attributes`"
-}
-
-variable "attributes" {
-  type        = list(string)
-  default     = []
-  description = "Additional attributes (e.g. `1`)"
-}
-
-variable "tags" {
-  type        = map(string)
-  default     = {}
-  description = "Additional tags (e.g. `map('BusinessUnit','XYZ')`"
-}
-
-variable "regex_replace_chars" {
-  type        = string
-  default     = "/[^a-zA-Z0-9-]/"
-  description = "Regex to replace chars with empty string in `namespace`, `environment`, `stage` and `name`. By default only hyphens, letters and digits are allowed, all other chars are removed"
-}
-
-variable "context" {
-  type = object({
-    namespace           = string
-    environment         = string
-    stage               = string
-    name                = string
-    enabled             = bool
-    delimiter           = string
-    attributes          = list(string)
-    label_order         = list(string)
-    tags                = map(string)
-    additional_tag_map  = map(string)
-    regex_replace_chars = string
-  })
-  default = {
-    namespace           = ""
-    environment         = ""
-    stage               = ""
-    name                = ""
-    enabled             = true
-    delimiter           = ""
-    attributes          = []
-    label_order         = []
-    tags                = {}
-    additional_tag_map  = {}
-    regex_replace_chars = ""
-  }
-  description = "Default context to use for passing state between label invocations"
-}
-
-/*****
-Module Variables: Elasticache - https://github.com/aciem-admin/tf-mod-prometheus/tree/master/modules/elasticache
-*****/
 
 
 variable "security_groups" {
@@ -227,4 +170,75 @@ variable "memcached_names" {
   type        = list(string)
   description = "A list of cache names to be created"
   default     = []
+}
+
+# -----------------------------------------------------------------------------
+# Variables: TF-MOD-LABEL - https://github.com/aciem-admin/tf-mod-label
+# -----------------------------------------------------------------------------
+
+variable "namespace" {
+  type        = string
+  default     = ""
+  description = "Namespace, which could be your organization name or abbreviation, e.g. 'eg' or 'cp'"
+}
+
+variable "environment" {
+  type        = string
+  default     = ""
+  description = "Environment, e.g. 'prod', 'staging', 'dev', 'pre-prod', 'UAT'"
+}
+
+variable "name" {
+  type        = string
+  default     = ""
+  description = "Solution name, e.g. 'app' or 'jenkins'"
+}
+
+variable "delimiter" {
+  type        = string
+  default     = "-"
+  description = "Delimiter to be used between `namespace`, `environment`, `stage`, `name` and `attributes`"
+}
+
+variable "attributes" {
+  type        = list(string)
+  default     = []
+  description = "Additional attributes (e.g. `1`)"
+}
+
+variable "tags" {
+  type        = map(string)
+  default     = {}
+  description = "Additional tags (e.g. `map('BusinessUnit','XYZ')`"
+}
+
+
+variable "context" {
+  type = object({
+    namespace           = string
+    environment         = string
+    stage               = string
+    name                = string
+    enabled             = bool
+    delimiter           = string
+    attributes          = list(string)
+    label_order         = list(string)
+    tags                = map(string)
+    additional_tag_map  = map(string)
+    regex_replace_chars = string
+  })
+  default = {
+    namespace           = ""
+    environment         = ""
+    stage               = ""
+    name                = ""
+    enabled             = true
+    delimiter           = ""
+    attributes          = []
+    label_order         = []
+    tags                = {}
+    additional_tag_map  = {}
+    regex_replace_chars = ""
+  }
+  description = "Default context to use for passing state between label invocations"
 }
