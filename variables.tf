@@ -31,10 +31,10 @@ variable "enabled" {
 }
 
 
-variable "security_groups" {
+variable "security_group_id" {
   type        = list(string)
   default     = []
-  description = "Security Group IDs"
+  description = "Security Group ID"
 }
 
 variable "vpc_id" {
@@ -66,10 +66,10 @@ variable "cluster_size" {
   description = "Count of nodes in cluster"
 }
 
-variable "port" {
-  type        = number
-  default     = 11211
-  description = "MemcacheD port"
+variable "service_ports" {
+  type        = list(string)
+  default     = ["11211", "-1", "1"]
+  description = "MemcacheD service ports"
 }
 
 variable "instance_type" {

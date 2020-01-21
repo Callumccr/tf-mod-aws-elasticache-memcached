@@ -1,19 +1,15 @@
-## macOS internals
-.DS_Store
+#  Local .terraform directories
+**/.terraform/*
 
-# NPM-related
-node_modules
-npm-debug.log*
-
-# Terraform runtime
-.terraform
-.terraform.tfstate.lock.info
-
-# Terraform state
+# .tfstate files
 *.tfstate
-*.tfstate.backup
+*.tfstate.*
 
-# Development-related
-/env
-.env
-TODO
+# .tfvars files
+*.tfvars
+
+**/.idea
+**/*.iml
+
+**/.build-harness
+**/build-harness
