@@ -31,10 +31,10 @@ variable "enabled" {
 }
 
 
-variable "security_group_id" {
+variable "security_group_ids" {
   type        = list(string)
   default     = []
-  description = "Security Group ID"
+  description = "Security Group IDs to pass to the module security group for 'ingress' traffic"
 }
 
 variable "vpc_id" {
