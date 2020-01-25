@@ -1,37 +1,40 @@
 #
 # Security Group Resources
 #
-resource "aws_security_group" "mamcached" {
+resource "aws_security_group" "default" {
   count  = var.enabled ? 1 : 0
   vpc_id = var.vpc_id
   name   = module.cache_label.id
 
   dynamic "ingress" {
-    for_each        = var.service_ports
-    from_port       = service_ports.value
-    to_port         = service_ports.value
-    protocol        = "tcp"
-    security_groups = element(var.security_group_ids, 0)
+    for_each = var.service_ports
+    content {
+      from_port       = service_ports.value
+      to_port         = service_ports.value
+      protocol        = "tcp"
+      security_groups = element(var.security_group_ids, 0)
+    }
   }
 
   dynamic "egress" {
-    for_each        = var.service_ports
-    from_port       = service_ports.value
-    to_port         = service_ports.value
-    protocol        = "tcp"
-    security_groups = element(var.security_group_ids, 0)
+    for_each = var.service_ports
+    content {
+      from_port       = service_ports.value
+      to_port         = service_ports.value
+      protocol        = "tcp"
+      security_groups = element(var.security_group_ids, 0)
+    }
   }
-
   tags = module.cache_label.tags
 }
 
-resource "aws_elasticache_subnet_group" "mamcached" {
+resource "aws_elasticache_subnet_group" "default" {
   count      = var.enabled == true && length(var.subnet_ids) > 0 ? 1 : 0
   name       = module.subnet_label.id
   subnet_ids = var.subnet_ids
 }
 
-resource "aws_elasticache_parameter_group" "mamcached" {
+resource "aws_elasticache_parameter_group" "default" {
   count  = var.enabled ? 1 : 0
   name   = module.parameter_group_label.id
   family = var.family
@@ -45,7 +48,7 @@ resource "aws_elasticache_parameter_group" "mamcached" {
   }
 }
 
-resource "aws_elasticache_cluster" "mamcached" {
+resource "aws_elasticache_cluster" "default" {
   count                  = var.enabled ? length(var.memcached_names) : 0
   cluster_id             = "${module.cache_label.id}-${element(var.memcached_names, count.index)}"
   engine                 = "memcached"
