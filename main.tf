@@ -7,17 +7,18 @@ resource "aws_security_group" "mamcached" {
   name   = module.cache_label.id
 
   dynamic "ingress" {
-    for_each in var.service_ports
+    for_each        = var.service_ports
     from_port       = service_ports.value
     to_port         = service_ports.value
     protocol        = "tcp"
     security_groups = element(var.security_group_ids, 0)
+  }
 
   dynamic "egress" {
-    for_each in var.service_ports
-    from_port   = service_ports.value
-    to_port     = service_ports.value
-    protocol    = "tcp"
+    for_each        = var.service_ports
+    from_port       = service_ports.value
+    to_port         = service_ports.value
+    protocol        = "tcp"
     security_groups = element(var.security_group_ids, 0)
   }
 
