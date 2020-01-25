@@ -60,7 +60,7 @@ resource "aws_elasticache_cluster" "default" {
   security_group_ids     = [join("", aws_security_group.default.*.id)]
   maintenance_window     = var.maintenance_window
   notification_topic_arn = var.notification_topic_arn
-  port                   = var.port
+  port                   = 11211
   availability_zone      = element(var.availability_zones, var.cluster_size)
   tags                   = module.cache_label.tags
 
