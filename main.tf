@@ -55,9 +55,9 @@ resource "aws_elasticache_cluster" "default" {
   engine_version         = var.engine_version
   node_type              = var.instance_type
   num_cache_nodes        = var.cluster_size
-  parameter_group_name   = join("", aws_elasticache_parameter_group.mamcached.*.name)
-  subnet_group_name      = join("", aws_elasticache_subnet_group.mamcached.*.name)
-  security_group_ids     = [join("", aws_security_group.mamcached.*.id)]
+  parameter_group_name   = join("", aws_elasticache_parameter_group.default.*.name)
+  subnet_group_name      = join("", aws_elasticache_subnet_group.default.*.name)
+  security_group_ids     = [join("", aws_security_group.default.*.id)]
   maintenance_window     = var.maintenance_window
   notification_topic_arn = var.notification_topic_arn
   port                   = var.port
