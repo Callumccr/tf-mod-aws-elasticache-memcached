@@ -13,7 +13,7 @@ resource "aws_security_group" "default" {
       from_port       = ingress.value
       to_port         = ingress.value
       protocol        = "tcp"
-      security_groups = length(var.security_group_ids) != [] ? element(var.security_group_ids, 0) : null
+      security_groups = length(var.security_group_ids) > 0 ? element(var.security_group_ids, count.index) : null
     }
   }
 
@@ -24,7 +24,7 @@ resource "aws_security_group" "default" {
       from_port       = egress.value
       to_port         = egress.value
       protocol        = "tcp"
-      security_groups = length(var.security_group_ids) != [] ? element(var.security_group_ids, 0) : null
+      security_groups = length(var.security_group_ids) > 0 ? element(var.security_group_ids, count.index) : null
     }
   }
   tags = module.cache_label.tags
