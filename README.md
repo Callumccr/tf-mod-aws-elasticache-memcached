@@ -110,6 +110,7 @@ TO-DO
 | alarm\_actions | (Optional) - Alarm actions | `list(string)` | `[]` | no |
 | alarm\_cpu\_threshold\_percent | (Optional) - CPU threshold alarm level | `number` | `75` | no |
 | alarm\_memory\_threshold\_bytes | Alarm memory threshold bytes | `number` | `10000000` | no |
+| allow\_all\_egress | (Required) - Whether to allow egress to (0.0.0.0/0) from the cluster | `bool` | `true` | no |
 | allowed\_cidr\_blocks | (Optional) - List of CIDR blocks that are allowed ingress to the cluster's Security Group created in the module | `list(string)` | `[]` | no |
 | allowed\_security\_groups | (Optional) - List of Security Group IDs that are allowed ingress to the cluster's Security Group created in the module | `list(string)` | `[]` | no |
 | apply\_immediately | (Optional) - Specifies whether any database modifications are applied immediately, or during the next maintenance window | `bool` | `true` | no |

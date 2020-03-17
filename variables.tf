@@ -161,6 +161,12 @@ variable "allowed_security_groups" {
   description = "(Optional) - List of Security Group IDs that are allowed ingress to the cluster's Security Group created in the module"
 }
 
+variable "allow_all_egress" {
+  type        = bool
+  description = "(Required) - Whether to allow egress to (0.0.0.0/0) from the cluster"
+  default     = true
+}
+
 variable "allowed_cidr_blocks" {
   type        = list(string)
   default     = []

@@ -30,7 +30,7 @@ resource "aws_security_group" "default" {
       from_port       = ingress.value
       to_port         = ingress.value
       protocol        = "tcp"
-      security_groups = length(var.security_group_ids) > 0 ? element(var.security_group_ids, count.index) : null
+      security_groups = length(var.allowed_security_groups) > 0 ? element(var.allowed_security_groups, count.index) : null
     }
   }
 
@@ -39,8 +39,8 @@ resource "aws_security_group" "default" {
     iterator    = ingress
     description = "Allow inbound traffic to internal CIDR ranges"
     content {
-      from_port   = 11211
-      to_port     = 11211
+      from_port   = var.port
+      to_port     = var.port
       protocol    = "tcp"
       cidr_blocks = length(var.allowed_cidr_blocks) > 0 ? [ingress.value] : null
     }
@@ -54,7 +54,7 @@ resource "aws_security_group" "default" {
       from_port   = egress.value
       to_port     = egress.value
       protocol    = "tcp"
-      cidr_blocks = length(var.security_group_ids) > 0 ? element(var.security_group_ids, count.index) : null
+      cidr_blocks = length(var.allowed_security_groups) > 0 ? element(var.allowed_security_groups, count.index) : null
     }
   }
 
@@ -63,7 +63,7 @@ resource "aws_security_group" "default" {
     from_port   = "-1"
     to_port     = "-1"
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = var.allow_all_egress ? ["0.0.0.0/0"] : null
   }
 
   tags = module.sg_label.tags
