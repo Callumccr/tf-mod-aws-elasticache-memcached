@@ -88,7 +88,7 @@ variable "cluster_size" {
   default     = 1
   description = "(Optional) - Cluster size"
 }
-cluster_ids
+
 variable "instance_type" {
   type        = string
   default     = "cache.t2.micro"
