@@ -90,8 +90,8 @@ resource "aws_elasticache_parameter_group" "default" {
 
 
 resource "aws_elasticache_cluster" "default" {
-  count                        = var.enabled ? length(var.memcached_names) : 0
-  cluster_id                   = "${module.label.id}-${element(var.memcached_names, count.index)}"
+  count                        = var.enabled ? length(var.cluster_ids) : 0
+  cluster_id                   = "${module.label.id}-${element(var.cluster_ids, count.index)}"
   engine                       = "memcached"
   engine_version               = var.engine_version
   node_type                    = var.instance_type
@@ -112,8 +112,8 @@ resource "aws_elasticache_cluster" "default" {
 # CloudWatch Resources
 #
 resource "aws_cloudwatch_metric_alarm" "cache_cpu" {
-  count               = var.enabled ? length(var.memcached_names) : 0
-  alarm_name          = "${module.label.id}-${element(var.memcached_names, count.index)}-cpu-utilization"
+  count               = var.enabled ? length(var.cluster_ids) : 0
+  alarm_name          = "${module.label.id}-${element(var.cluster_ids, count.index)}-cpu-utilization"
   alarm_description   = "Redis cluster CPU utilization"
   comparison_operator = "GreaterThanThreshold"
   evaluation_periods  = "1"
@@ -134,8 +134,8 @@ resource "aws_cloudwatch_metric_alarm" "cache_cpu" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "cache_memory" {
-  count               = var.enabled ? length(var.memcached_names) : 0
-  alarm_name          = "${module.label.id}-${element(var.memcached_names, count.index)}-freeable-memory"
+  count               = var.enabled ? length(var.cluster_ids) : 0
+  alarm_name          = "${module.label.id}-${element(var.cluster_ids, count.index)}-freeable-memory"
   alarm_description   = "Redis cluster freeable memory"
   comparison_operator = "LessThanThreshold"
   evaluation_periods  = "1"

@@ -42,6 +42,11 @@ variable "enabled" {
   default     = true
 }
 
+variable "cluster_ids" {
+  type        = list(string)
+  description = "(Required) Group identifiers. ElastiCache converts these names to lowercase"
+}
+
 variable "security_group_ids" {
   type        = list(string)
   default     = []
@@ -83,7 +88,7 @@ variable "cluster_size" {
   default     = 1
   description = "(Optional) - Cluster size"
 }
-
+cluster_ids
 variable "instance_type" {
   type        = string
   default     = "cache.t2.micro"
