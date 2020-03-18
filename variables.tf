@@ -122,6 +122,12 @@ variable "alarm_memory_threshold_bytes" {
 variable "alarm_actions" {
   type        = list(string)
   default     = []
+  description = "(Optional) The list of actions to execute when this alarm transitions into an OK state from any other state. Each action is specified as an Amazon Resource Name (ARN)."
+}
+
+variable "ok_actions" {
+  type        = list(string)
+  default     = []
   description = "(Optional) - Alarm actions"
 }
 
