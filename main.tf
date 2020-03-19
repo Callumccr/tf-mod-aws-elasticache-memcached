@@ -35,7 +35,7 @@ resource "aws_security_group" "default" {
   }
 
   dynamic "ingress" {
-    for_each = var.allowed_cidr_blocks
+    for_each length(var.allowed_cidr_blocks) > 0 ? var.allowed_cidr_blocks : null
     iterator = ingress
     content {
       description = "Allow inbound traffic to internal CIDR ranges"
@@ -47,7 +47,7 @@ resource "aws_security_group" "default" {
   }
 
   dynamic "egress" {
-    for_each = var.service_ports
+    for_each = length(var.allowed_security_groups) > 0 ? var.service_ports : null
     iterator = egress
     content {
       description     = "Allow egress traffic to existing Security Groups"
