@@ -59,6 +59,12 @@ variable "vpc_id" {
   description = "(Optional) - VPC ID"
 }
 
+variable "vpc_cidr_block" {
+  type        = list(string)
+  default     = [""]
+  description = "(Optional) - VPC CIDR block"
+}
+
 variable "subnet_ids" {
   type        = list(string)
   description = "(Optional) - Subnet IDs"

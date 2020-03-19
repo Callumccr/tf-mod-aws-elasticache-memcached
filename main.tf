@@ -46,6 +46,18 @@ resource "aws_security_group" "default" {
     }
   }
 
+  dynamic "ingress" {
+    for_each = length(var.vpc_cidr_block) > 0 ? var.vpc_cidr_block : null
+    iterator = ingress
+    content {
+      description = "Allow inbound traffic to internal VPC"
+      from_port   = var.port
+      to_port     = var.port
+      protocol    = "tcp"
+      cidr_blocks = var.vpc_cidr_block
+    }
+  }
+
   dynamic "egress" {
     for_each = length(var.allowed_security_groups) > 0 ? var.service_ports : null
     iterator = egress
