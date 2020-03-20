@@ -23,8 +23,7 @@ resource "aws_security_group" "default" {
   name   = module.sg_label.id
 
   dynamic "ingress" {
-    count    = length(var.allowed_security_groups) > 0 ? 1 : 0
-    for_each = var.service_ports
+    for_each = length(var.allowed_security_groups) > 0 ? var.service_ports : []
     iterator = ingress
     content {
       description     = "Allow inbound traffic from existing Security Groups"
