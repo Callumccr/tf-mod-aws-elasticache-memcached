@@ -30,7 +30,7 @@ resource "aws_security_group" "default" {
       from_port       = ingress.value
       to_port         = ingress.value
       protocol        = "tcp"
-      security_groups = length(var.allowed_security_groups) > 0 ? [element(var.allowed_security_groups, count.index)] : []
+      security_groups = length(var.allowed_security_groups) > 0 ? [element(var.allowed_security_groups, count.index)] : null
     }
   }
 
