@@ -23,31 +23,31 @@ resource "aws_security_group" "default" {
   name   = module.sg_label.id
 
   dynamic "ingress" {
-    for_each = length(var.allowed_security_groups) > 0 ? var.service_ports : null
+    for_each = length(var.allowed_security_groups) > 0 ? var.service_ports : []
     iterator = ingress
     content {
       description     = "Allow inbound traffic from existing Security Groups"
       from_port       = ingress.value
       to_port         = ingress.value
       protocol        = "tcp"
-      security_groups = length(var.allowed_security_groups) > 0 ? [element(var.allowed_security_groups, count.index)] : null
+      security_groups = length(var.allowed_security_groups) > 0 ? [element(var.allowed_security_groups, count.index)] : []
     }
   }
 
   dynamic "ingress" {
-    for_each = length(var.allowed_cidr_blocks) > 0 ? var.allowed_cidr_blocks : null
+    for_each = length(var.allowed_cidr_blocks) > 0 ? var.allowed_cidr_blocks : []
     iterator = ingress
     content {
       description = "Allow inbound traffic to internal CIDR ranges"
       from_port   = var.port
       to_port     = var.port
       protocol    = "tcp"
-      cidr_blocks = length(var.allowed_cidr_blocks) > 0 ? [ingress.value] : null
+      cidr_blocks = length(var.allowed_cidr_blocks) > 0 ? [ingress.value] : []
     }
   }
 
   dynamic "ingress" {
-    for_each = length(var.vpc_cidr_block) > 0 ? var.vpc_cidr_block : null
+    for_each = length(var.vpc_cidr_block) > 0 ? var.vpc_cidr_block : []
     iterator = ingress
     content {
       description = "Allow inbound traffic to internal VPC"
@@ -59,14 +59,14 @@ resource "aws_security_group" "default" {
   }
 
   dynamic "egress" {
-    for_each = length(var.allowed_security_groups) > 0 ? var.service_ports : null
+    for_each = length(var.allowed_security_groups) > 0 ? var.service_ports : []
     iterator = egress
     content {
       description     = "Allow egress traffic to existing Security Groups"
       from_port       = egress.value
       to_port         = egress.value
       protocol        = "tcp"
-      security_groups = length(var.allowed_security_groups) > 0 ? [element(var.allowed_security_groups, count.index)] : null
+      security_groups = length(var.allowed_security_groups) > 0 ? [element(var.allowed_security_groups, count.index)] : []
     }
   }
 
@@ -75,7 +75,7 @@ resource "aws_security_group" "default" {
     from_port   = "-1"
     to_port     = "-1"
     protocol    = "tcp"
-    cidr_blocks = var.allow_all_egress ? ["0.0.0.0/0"] : null
+    cidr_blocks = var.allow_all_egress ? ["0.0.0.0/0"] : []
   }
 
   tags = module.sg_label.tags
