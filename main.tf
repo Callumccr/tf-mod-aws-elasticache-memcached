@@ -13,7 +13,6 @@ resource "null_resource" "cluster_urls" {
     create_before_destroy = true
   }
 }
-
 #
 # Security Group Resources
 #
@@ -23,7 +22,7 @@ resource "aws_security_group" "default" {
   name   = module.sg_label.id
 
   dynamic "ingress" {
-    for_each = length(var.allowed_security_groups) > 0 ? var.service_ports : null
+    for_each = length(var.allowed_security_groups) > 0 ? var.service_ports : [0]
     iterator = ingress
     content {
       description     = "Allow inbound traffic from existing Security Groups"
