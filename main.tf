@@ -21,97 +21,45 @@ resource "aws_security_group" "default" {
   vpc_id = var.vpc_id
   name   = module.sg_label.id
   tags   = module.sg_label.tags
-}
 
-resource "aws_security_group_rule" "egress" {
-  count             = var.enabled && var.use_existing_security_groups == false && var.allow_all_egress == true ? 1 : 0
-  description       = "Allow all egress traffic"
-  from_port         = 0
-  to_port           = 0
-  protocol          = "-1"
-  cidr_blocks       = ["0.0.0.0/0"]
-  security_group_id = join("", aws_security_group.default.*.id)
-  type              = "egress"
-}
+  dynamic "ingress" {
+    # for_each = [for s in var.allowed_security_groups : null if s != ""]
+    for_each = length(var.allowed_security_groups) > 0 ? [var.port] : null
+    iterator = ingress
+    content {
+      description     = "Allow inbound traffic from existing Security Groups"
+      from_port       = ingress.value
+      to_port         = ingress.value
+      protocol        = "tcp"
+      security_groups = var.allowed_security_groups
+    }
+  }
 
-resource "aws_security_group_rule" "ingress_security_groups" {
-  count                    = var.enabled && var.use_existing_security_groups == false && length(var.allowed_security_groups) > 0 ? ? length(var.allowed_security_groups) : 0
-  description              = "Allow inbound traffic from existing Security Groups"
-  from_port                = var.port
-  to_port                  = var.port
-  protocol                 = "tcp"
-  source_security_group_id = var.allowed_security_groups[count.index]
-  security_group_id        = join("", aws_security_group.default.*.id)
-  type                     = "ingress"
-}
+  dynamic "ingress" {
+    for_each = length(var.allowed_security_groups) > 0 ? var.allowed_cidr_blocks : null
+    iterator = ingress
+    content {
+      description = "Allow inbound traffic to internal CIDR ranges"
+      from_port   = var.port
+      to_port     = var.port
+      protocol    = "tcp"
+      cidr_blocks = [ingress.value]
+    }
+  }
 
-resource "aws_security_group_rule" "ingress_cidr_blocks" {
-  count             = var.enabled && var.use_existing_security_groups == false && length(var.allowed_cidr_blocks) > 0 ? 1 : 0
-  description       = "Allow inbound traffic from CIDR blocks"
-  from_port         = var.port
-  to_port           = var.port
-  protocol          = "tcp"
-  cidr_blocks       = var.allowed_cidr_blocks
-  security_group_id = join("", aws_security_group.default.*.id)
-  type              = "ingress"
-}
-
-
-dynamic "ingress" {
-  for_each = length(var.allowed_security_groups) > 0 ? var.service_ports : null
-  iterator = ingress
-  content {
-    description     = "Allow inbound traffic from existing Security Groups"
-    from_port       = ingress.value
-    to_port         = ingress.value
-    protocol        = "tcp"
-    security_groups = length(var.allowed_security_groups) > 0 ? [element(var.allowed_security_groups, count.index)] : null
+  dynamic "egress" {
+    for_each = var.allow_all_egress == true ? ["0.0.0.0/0"] : null
+    iterator = ingress
+    content {
+      description = "Allow inbound traffic to internal CIDR ranges"
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
+      cidr_blocks = [ingress.value]
+    }
   }
 }
 
-# dynamic "ingress" {
-#   for_each = length(var.allowed_cidr_blocks) > 0 ? var.allowed_cidr_blocks : []
-#   iterator = ingress
-#   content {
-#     description = "Allow inbound traffic to internal CIDR ranges"
-#     from_port   = var.port
-#     to_port     = var.port
-#     protocol    = "tcp"
-#     cidr_blocks = length(var.allowed_cidr_blocks) > 0 ? [ingress.value] : []
-#   }
-# }
-
-# dynamic "ingress" {
-#   for_each = length(var.vpc_cidr_block) > 0 ? var.vpc_cidr_block : []
-#   iterator = ingress
-#   content {
-#     description = "Allow inbound traffic to internal VPC"
-#     from_port   = var.port
-#     to_port     = var.port
-#     protocol    = "tcp"
-#     cidr_blocks = var.vpc_cidr_block
-#   }
-# }
-
-# dynamic "egress" {
-#   for_each = length(var.allowed_security_groups) > 0 ? var.service_ports : []
-#   iterator = egress
-#   content {
-#     description     = "Allow egress traffic to existing Security Groups"
-#     from_port       = egress.value
-#     to_port         = egress.value
-#     protocol        = "tcp"
-#     security_groups = length(var.allowed_security_groups) > 0 ? [element(var.allowed_security_groups, count.index)] : []
-#   }
-# }
-
-# egress {
-#   description = "Allow all egress traffic"
-#   from_port   = "-1"
-#   to_port     = "-1"
-#   protocol    = "tcp"
-#   cidr_blocks = var.allow_all_egress ? ["0.0.0.0/0"] : []
-# }
 resource "aws_elasticache_subnet_group" "default" {
   count      = var.enabled == true && length(var.subnet_ids) > 0 ? 1 : 0
   name       = module.subnet_label.id
@@ -128,10 +76,10 @@ resource "aws_elasticache_parameter_group" "default" {
     value = var.max_item_size
   }
 }
-
-
-
-
+ 
+#
+# Cluster Resources
+#
 resource "aws_elasticache_cluster" "default" {
   count                        = var.enabled ? length(var.cluster_ids) : 0
   cluster_id                   = "${module.label.id}-${element(var.cluster_ids, count.index)}"

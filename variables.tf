@@ -59,22 +59,10 @@ variable "vpc_id" {
   description = "(Optional) - VPC ID"
 }
 
-variable "vpc_cidr_block" {
-  type        = list(string)
-  default     = [""]
-  description = "(Optional) - The CIDR block of the VPC to add to the security group for ingress traffic"
-}
-
 variable "subnet_ids" {
   type        = list(string)
   description = "(Optional) - Subnet IDs"
   default     = []
-}
-
-variable "service_ports" {
-  type        = list(string)
-  default     = ["11211", "-1", "1"]
-  description = "(Optional) - MemcacheD service ports"
 }
 
 variable "max_item_size" {
