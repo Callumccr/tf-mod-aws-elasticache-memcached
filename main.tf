@@ -20,6 +20,7 @@ resource "aws_security_group" "default" {
   count  = var.enabled && var.use_existing_security_groups == false ? 1 : 0
   vpc_id = var.vpc_id
   name   = module.sg_label.id
+  tags   = module.sg_label.tags
 
   dynamic "ingress" {
     # for_each = [for s in var.allowed_security_groups : null if s != ""]
@@ -57,9 +58,10 @@ resource "aws_security_group" "default" {
       cidr_blocks = [ingress.value]
     }
   }
-
-  tags = module.sg_label.tags
 }
+
+
+
 resource "aws_elasticache_subnet_group" "default" {
   count      = var.enabled == true && length(var.subnet_ids) > 0 ? 1 : 0
   name       = module.subnet_label.id
