@@ -3,23 +3,23 @@
 # -----------------------------------------------------------------------------
 
 output "cluster_id" {
-  value       = join("", aws_elasticache_cluster.default.*.id)
-  description = "Cluster ID"
+  value       = [aws_elasticache_cluster.default.*.id]
+  description = "Cluster ID/s"
 }
 
 output "security_group_id" {
-  value       = join("", aws_security_group.default.*.id)
+  value       = [aws_security_group.default.*.id]
   description = "Security Group ID"
 }
 
 output "cluster_address" {
-  value       = join("", aws_elasticache_cluster.default.*.cluster_address)
-  description = "Cluster address"
+  value       = [aws_elasticache_cluster.default.*.cluster_address]
+  description = "Cluster address/es"
 }
 
 output "cluster_configuration_endpoint" {
-  value       = join("", aws_elasticache_cluster.default.*.configuration_endpoint)
-  description = "Cluster configuration endpoint"
+  value       = [aws_elasticache_cluster.default.*.configuration_endpoint]
+  description = "Cluster configuration endpoint/s"
 }
 
 output "hostname" {
