@@ -47,12 +47,6 @@ variable "cluster_ids" {
   description = "(Required) Group identifiers. ElastiCache converts these names to lowercase"
 }
 
-variable "security_group_ids" {
-  type        = list(string)
-  default     = []
-  description = "(Optional) - Security Group IDs to pass to the module security group for 'ingress' traffic"
-}
-
 variable "vpc_id" {
   type        = string
   default     = ""
@@ -150,37 +144,37 @@ variable "port" {
 
 variable "use_existing_security_groups" {
   type        = bool
-  description = "(Optional) - Flag to enable/disable creation of Security Group in the module. Set to `true` to disable Security Group creation and provide a list of existing security Group IDs in `existing_security_groups` to place the cluster into"
+  description = "(Optional) - Flag to enable/disable creation of Security Group in the module. Set to `true` to disable Security Group creation and provide a list of existing security Group IDs in `existing_security_groups` to place the elasticache cluster into"
   default     = false
 }
 
 variable "existing_security_groups" {
   type        = list(string)
   default     = []
-  description = "(Optional) - List of existing Security Group IDs to place the cluster into. Set `use_existing_security_groups` to `true` to enable using `existing_security_groups` as Security Groups for the cluster"
+  description = "(Optional) - List of existing Security Group IDs to place the cluster into. Set `use_existing_security_groups` to `true` to enable using `existing_security_groups` as Security Groups for the elasticache cluster"
 }
 
 variable "allowed_security_groups" {
   type        = list(string)
   default     = []
-  description = "(Optional) - List of Security Group IDs that are allowed ingress to the cluster's Security Group created in the module"
+  description = "(Optional) - List of Security Group IDs that are allowed ingress to the elasticache cluster"
 }
 
 variable "allow_all_egress" {
   type        = bool
-  description = "(Required) - Whether to allow egress to (0.0.0.0/0) from the cluster"
+  description = "(Required) - Whether to allow egress to (0.0.0.0/0) from the the elasticache cluster"
   default     = true
 }
 
 variable "allowed_cidr_blocks" {
   type        = list(string)
   default     = []
-  description = "(Optional) - List of CIDR blocks that are allowed ingress to the cluster's Security Group created in the module"
+  description = "(Optional) - List of CIDR blocks that are allowed ingress to the elasticache cluster"
 }
 
 variable "elasticache_subnet_group_name" {
   type        = string
-  description = "(Optional) - Subnet group name for the ElastiCache instance"
+  description = "(Optional) - Subnet group name for the elasticache cluster"
   default     = ""
 }
 
