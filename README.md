@@ -107,7 +107,8 @@ TO-DO
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:-----:|
 | availability\_zones | (Required) - List of Availability Zones for the cluster | `list(string)` | n/a | yes |
-| alarm\_actions | (Optional) - Alarm actions | `list(string)` | `[]` | no |
+| cluster\_ids | (Required) Group identifiers. ElastiCache converts these names to lowercase | `list(string)` | n/a | yes |
+| alarm\_actions | (Optional) The list of actions to execute when this alarm transitions into an OK state from any other state. Each action is specified as an Amazon Resource Name (ARN). | `list(string)` | `[]` | no |
 | alarm\_cpu\_threshold\_percent | (Optional) - CPU threshold alarm level | `number` | `75` | no |
 | alarm\_memory\_threshold\_bytes | Alarm memory threshold bytes | `number` | `10000000` | no |
 | allow\_all\_egress | (Required) - Whether to allow egress to (0.0.0.0/0) from the cluster | `bool` | `true` | no |
@@ -134,9 +135,9 @@ TO-DO
 | name | (Optional) - Solution name, e.g. 'vault', 'consul', 'keycloak', 'k8s', or 'baseline' | `string` | `""` | no |
 | namespace | (Optional) - Namespace, which could be your abbreviated product team, e.g. 'rci', 'mi', 'hp', or 'core' | `string` | `""` | no |
 | notification\_topic\_arn | (Optional) - Notification topic arn | `string` | `""` | no |
+| ok\_actions | (Optional) - Alarm actions | `list(string)` | `[]` | no |
 | port | (Optional) - Memcached port | `number` | `11211` | no |
 | security\_group\_ids | (Optional) - Security Group IDs to pass to the module security group for 'ingress' traffic | `list(string)` | `[]` | no |
-| service\_ports | (Optional) - MemcacheD service ports | `list(string)` | <code><pre>[<br>  "11211",<br>  "-1",<br>  "1"<br>]<br></pre></code> | no |
 | subnet\_ids | (Optional) - Subnet IDs | `list(string)` | `[]` | no |
 | tags | (Optional) - Additional tags | `map(string)` | `{}` | no |
 | use\_existing\_security\_groups | (Optional) - Flag to enable/disable creation of Security Group in the module. Set to `true` to disable Security Group creation and provide a list of existing security Group IDs in `existing_security_groups` to place the cluster into | `bool` | `false` | no |
@@ -147,9 +148,9 @@ TO-DO
 
 | Name | Description |
 |------|-------------|
-| cluster\_address | Cluster address |
-| cluster\_configuration\_endpoint | Cluster configuration endpoint |
-| cluster\_id | Cluster ID |
+| cluster\_address | Cluster address/es |
+| cluster\_configuration\_endpoint | Cluster configuration endpoint/s |
+| cluster\_id | Cluster ID/s |
 | cluster\_urls | Cluster URLs |
 | hostname | Cluster hostname |
 | security\_group\_id | Security Group ID |

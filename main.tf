@@ -76,7 +76,7 @@ resource "aws_elasticache_parameter_group" "default" {
     value = var.max_item_size
   }
 }
- 
+
 #
 # Cluster Resources
 #
