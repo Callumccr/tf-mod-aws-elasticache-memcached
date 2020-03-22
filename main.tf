@@ -22,7 +22,7 @@ resource "aws_security_group" "default" {
   name   = module.sg_label.id
 
   dynamic "ingress" {
-    for_each = [for s in var.allowed_security_groups : null if s == ""]
+    for_each = [for s in var.allowed_security_groups : null if s != ""]
     iterator = ingress
     content {
       description     = "Allow inbound traffic from existing Security Groups"
@@ -34,7 +34,7 @@ resource "aws_security_group" "default" {
   }
 
   dynamic "ingress" {
-    for_each = [for s in var.allowed_cidr_blocks : null if s == ""]
+    for_each = [for s in var.allowed_cidr_blocks : null if s != ""]
     iterator = ingress
     content {
       description = "Allow inbound traffic to internal CIDR ranges"
