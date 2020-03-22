@@ -71,12 +71,6 @@ variable "subnet_ids" {
   default     = []
 }
 
-variable "service_ports" {
-  type        = list(string)
-  default     = ["11211", "-1", "1"]
-  description = "(Optional) - MemcacheD service ports"
-}
-
 variable "max_item_size" {
   type        = number
   default     = 10485760
