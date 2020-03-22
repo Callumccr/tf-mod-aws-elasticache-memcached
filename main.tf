@@ -48,7 +48,7 @@ resource "aws_security_group" "default" {
   }
 
   dynamic "egress" {
-    for_each = allow_all_egress == true ? ["0.0.0.0/0"] : null
+    for_each = var.allow_all_egress == true ? ["0.0.0.0/0"] : null
     iterator = ingress
     content {
       description = "Allow inbound traffic to internal CIDR ranges"
