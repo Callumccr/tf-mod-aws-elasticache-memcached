@@ -60,8 +60,6 @@ resource "aws_security_group" "default" {
   }
 }
 
-
-
 resource "aws_elasticache_subnet_group" "default" {
   count      = var.enabled == true && length(var.subnet_ids) > 0 ? 1 : 0
   name       = module.subnet_label.id
@@ -78,10 +76,10 @@ resource "aws_elasticache_parameter_group" "default" {
     value = var.max_item_size
   }
 }
-
-
-
-
+ 
+#
+# Cluster Resources
+#
 resource "aws_elasticache_cluster" "default" {
   count                        = var.enabled ? length(var.cluster_ids) : 0
   cluster_id                   = "${module.label.id}-${element(var.cluster_ids, count.index)}"
