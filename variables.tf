@@ -59,12 +59,6 @@ variable "vpc_id" {
   description = "(Optional) - VPC ID"
 }
 
-variable "vpc_cidr_block" {
-  type        = list(string)
-  default     = [""]
-  description = "(Optional) - The CIDR block of the VPC to add to the security group for ingress traffic"
-}
-
 variable "subnet_ids" {
   type        = list(string)
   description = "(Optional) - Subnet IDs"
