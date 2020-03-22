@@ -52,9 +52,9 @@ resource "aws_security_group" "default" {
     iterator = ingress
     content {
       description = "Allow inbound traffic to internal CIDR ranges"
-      from_port   = var.port
-      to_port     = var.port
-      protocol    = "tcp"
+      from_port   = 0
+      to_port     = 0
+      protocol    = "-1"
       cidr_blocks = [ingress.value]
     }
   }
