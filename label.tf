@@ -11,27 +11,33 @@ module "label" {
 
 module "sg_label" {
   source             = "git::https://github.com/Callumccr/tf-mod-label.git?ref=master"
-  context            = module.label.context
+  namespace          = var.namespace
+  environment        = var.environment
+  name               = var.name
   delimiter          = "-"
-  attributes         = ["sg"]
+  attributes         = concat(module.label.attributes, ["sg"])
   additional_tag_map = {} /* Additional attributes (e.g. 1) */
   label_order        = ["environment", "namespace", "name", "attributes"]
 }
 
 module "subnet_label" {
   source             = "git::https://github.com/Callumccr/tf-mod-label.git?ref=master"
-  context            = module.label.context
+  namespace          = var.namespace
+  environment        = var.environment
+  name               = var.name
   delimiter          = "-"
-  attributes         = ["subnet", "group"]
+  attributes         = concat(module.label.attributes, ["subnet"], ["group"])
   additional_tag_map = {} /* Additional attributes (e.g. 1) */
   label_order        = ["environment", "namespace", "name", "attributes"]
 }
 
 module "parameter_group_label" {
   source             = "git::https://github.com/Callumccr/tf-mod-label.git?ref=master"
-  context            = module.label.context
+  namespace          = var.namespace
+  environment        = var.environment
+  name               = var.name
   delimiter          = "-"
-  attributes         = ["parameter", "group"]
+  attributes         = concat(module.label.attributes, ["parameter", "group"])
   additional_tag_map = {} /* Additional attributes (e.g. 1) */
   label_order        = ["environment", "namespace", "name", "attributes"]
 }
