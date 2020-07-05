@@ -15,7 +15,19 @@ variable "aws_account_id" {
 }
 
 variable "aws_assume_role_arn" {
-  description = "ARN of the IAM role when optionally connecting to AWS via assumed role. Autoloaded from account.tfvars."
+  description = "(Optional) - ARN of the IAM role when optionally connecting to AWS via assumed role. Autoloaded from account.tfvars."
+  type        = string
+  default     = ""
+}
+
+variable "aws_assume_role_session_name" {
+  description = "(Optional) - The session name to use when making the AssumeRole call."
+  type        = string
+  default     = ""
+}
+
+variable "aws_assume_role_external_id" {
+  description = "(Optional) - The external ID to use when making the AssumeRole call."
   type        = string
   default     = ""
 }
@@ -30,215 +42,184 @@ variable "enabled" {
   default     = true
 }
 
-
-variable "security_group_ids" {
+variable "cluster_ids" {
   type        = list(string)
-  default     = []
-  description = "Security Group IDs to pass to the module security group for 'ingress' traffic"
+  description = "(Required) Group identifiers. ElastiCache converts these names to lowercase"
 }
 
 variable "vpc_id" {
   type        = string
-  description = "VPC ID"
+  default     = ""
+  description = "(Optional) - VPC ID"
 }
 
 variable "subnet_ids" {
   type        = list(string)
-  description = "Subnet IDs"
+  description = "(Optional) - Subnet IDs"
   default     = []
 }
 
-variable "elasticache_subnet_group_name" {
-  type        = string
-  description = "Subnet group name for the ElastiCache instance"
-  default     = ""
+variable "max_item_size" {
+  type        = number
+  default     = 10485760
+  description = "(Optional) - Max item size"
 }
 
 variable "maintenance_window" {
   type        = string
-  default     = "fri:03:00-fri:04:00"
-  description = "Maintenance window"
+  default     = "wed:03:00-wed:04:00"
+  description = "(Optional) - Maintenance window"
 }
 
 variable "cluster_size" {
   type        = number
   default     = 1
-  description = "Count of nodes in cluster"
-}
-
-variable "service_ports" {
-  type        = list(string)
-  default     = ["11211", "-1", "1"]
-  description = "MemcacheD service ports"
+  description = "(Optional) - Cluster size"
 }
 
 variable "instance_type" {
   type        = string
   default     = "cache.t2.micro"
-  description = "Elastic cache instance type"
-}
-
-variable "family" {
-  type        = string
-  default     = "memcached1.5"
-  description = "MemcacheD family"
-}
-
-variable "parameter" {
-  type = list(object({
-    name  = string
-    value = string
-  }))
-  default     = []
-  description = "A list of MemcacheD parameters to apply. Note that parameters may differ from one MemcacheD family to another"
+  description = "(Optional) - Elastic cache instance type"
 }
 
 variable "engine_version" {
   type        = string
-  default     = "4.0.10"
-  description = "MemcacheD engine version"
-}
-
-variable "at_rest_encryption_enabled" {
-  type        = bool
-  default     = false
-  description = "Enable encryption at rest"
-}
-
-variable "transit_encryption_enabled" {
-  type        = bool
-  default     = true
-  description = "Enable TLS"
+  default     = "1.5.16"
+  description = "(Optional) - Memcached engine version. For more info, see https://docs.aws.amazon.com/AmazonElastiCache/latest/mem-ug/supported-engine-versions.html"
 }
 
 variable "notification_topic_arn" {
   type        = string
   default     = ""
-  description = "Notification topic arn"
+  description = "(Optional) - Notification topic arn"
 }
 
 variable "alarm_cpu_threshold_percent" {
   type        = number
   default     = 75
-  description = "CPU threshold alarm level"
+  description = "(Optional) - CPU threshold alarm level"
 }
 
 variable "alarm_memory_threshold_bytes" {
-  # 10MB
   type        = number
-  default     = 10000000
-  description = "Ram threshold alarm level"
+  default     = 10000000 # 10MB
+  description = "Alarm memory threshold bytes"
 }
 
 variable "alarm_actions" {
   type        = list(string)
-  description = "Alarm action list"
   default     = []
+  description = "(Optional) The list of actions to execute when this alarm transitions into an OK state from any other state. Each action is specified as an Amazon Resource Name (ARN)."
 }
 
 variable "ok_actions" {
   type        = list(string)
-  description = "The list of actions to execute when this alarm transitions into an OK state from any other state. Each action is specified as an Amazon Resource Number (ARN)"
   default     = []
+  description = "(Optional) - Alarm actions"
 }
 
 variable "apply_immediately" {
   type        = bool
   default     = true
-  description = "Apply changes immediately"
-}
-
-variable "automatic_failover" {
-  type        = bool
-  default     = false
-  description = "Automatic failover (Not available for T1/T2 instances)"
+  description = "(Optional) - Specifies whether any database modifications are applied immediately, or during the next maintenance window"
 }
 
 variable "availability_zones" {
   type        = list(string)
-  description = "Availability zone IDs"
-  default     = []
+  description = "(Required) - List of Availability Zones for the cluster"
 }
 
 variable "zone_id" {
   type        = string
   default     = ""
-  description = "Route53 DNS Zone ID"
+  description = "(Optional) - Route53 DNS Zone ID"
 }
 
-variable "memcached_names" {
+variable "port" {
+  type        = number
+  default     = 11211
+  description = "(Optional) - Memcached port"
+}
+
+variable "use_existing_security_groups" {
+  type        = bool
+  description = "(Optional) - Flag to enable/disable creation of Security Group in the module. Set to `true` to disable Security Group creation and provide a list of existing security Group IDs in `existing_security_groups` to place the elasticache cluster into"
+  default     = false
+}
+
+variable "existing_security_groups" {
   type        = list(string)
-  description = "A list of cache names to be created"
   default     = []
+  description = "(Optional) - List of existing Security Group IDs to place the cluster into. Set `use_existing_security_groups` to `true` to enable using `existing_security_groups` as Security Groups for the elasticache cluster"
+}
+
+variable "allowed_security_groups" {
+  type        = list(string)
+  default     = []
+  description = "(Optional) - List of Security Group IDs that are allowed ingress to the elasticache cluster"
+}
+
+variable "allow_all_egress" {
+  type        = bool
+  description = "(Required) - Whether to allow egress to (0.0.0.0/0) from the the elasticache cluster"
+  default     = true
+}
+
+variable "allowed_cidr_blocks" {
+  type        = list(string)
+  default     = []
+  description = "(Optional) - List of CIDR blocks that are allowed ingress to the elasticache cluster"
+}
+
+variable "elasticache_subnet_group_name" {
+  type        = string
+  description = "(Optional) - Subnet group name for the elasticache cluster"
+  default     = ""
+}
+
+variable "elasticache_parameter_group_family" {
+  type        = string
+  description = "(Optional) - ElastiCache parameter group family"
+  default     = "memcached1.5"
 }
 
 # -----------------------------------------------------------------------------
-# Variables: TF-MOD-LABEL - https://github.com/aciem-admin/tf-mod-label
+# Variables: TF-MOD-LABEL
 # -----------------------------------------------------------------------------
 
 variable "namespace" {
   type        = string
   default     = ""
-  description = "Namespace, which could be your organization name or abbreviation, e.g. 'eg' or 'cp'"
+  description = "(Optional) - Namespace, which could be your abbreviated product team, e.g. 'rci', 'mi', 'hp', or 'core'"
 }
 
 variable "environment" {
   type        = string
   default     = ""
-  description = "Environment, e.g. 'prod', 'staging', 'dev', 'pre-prod', 'UAT'"
+  description = "(Optional) - Environment, e.g. 'dev', 'qa', 'staging', 'prod'"
 }
 
 variable "name" {
   type        = string
   default     = ""
-  description = "Solution name, e.g. 'app' or 'jenkins'"
+  description = "(Optional) - Solution name, e.g. 'vault', 'consul', 'keycloak', 'k8s', or 'baseline'"
 }
 
 variable "delimiter" {
   type        = string
   default     = "-"
-  description = "Delimiter to be used between `namespace`, `environment`, `stage`, `name` and `attributes`"
+  description = "(Optional) - Delimiter to be used between `namespace`, `environment`, `stage`, `name` and `attributes`"
 }
 
 variable "attributes" {
   type        = list(string)
   default     = []
-  description = "Additional attributes (e.g. `1`)"
+  description = "(Optional) - Additional attributes (e.g. `1`)"
 }
 
 variable "tags" {
   type        = map(string)
   default     = {}
-  description = "Additional tags (e.g. `map('BusinessUnit','XYZ')`"
-}
-
-
-variable "context" {
-  type = object({
-    namespace           = string
-    environment         = string
-    stage               = string
-    name                = string
-    enabled             = bool
-    delimiter           = string
-    attributes          = list(string)
-    label_order         = list(string)
-    tags                = map(string)
-    additional_tag_map  = map(string)
-    regex_replace_chars = string
-  })
-  default = {
-    namespace           = ""
-    environment         = ""
-    stage               = ""
-    name                = ""
-    enabled             = true
-    delimiter           = ""
-    attributes          = []
-    label_order         = []
-    tags                = {}
-    additional_tag_map  = {}
-    regex_replace_chars = ""
-  }
-  description = "Default context to use for passing state between label invocations"
+  description = "(Optional) - Additional tags"
 }
